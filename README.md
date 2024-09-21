@@ -3,11 +3,11 @@ This is a containerized version of `code-server`, instead of using the official 
 ## How to use
 ### Build the image
 ```bash
-docker build -t monkefe-code-server .
+docker build -t mfe-code-server .
 ```
 ### Run the container
 ```bash
-docker run -d -p 8080:8080 -v <TODO> -e <TODO> monkefe-code-server
+docker run -d -p 8080:8080 -v <TODO> -e <TODO> mfe-code-server
 ```
 or using `docker-compose`:
 ```yaml
