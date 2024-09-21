@@ -1,0 +1,62 @@
+#!/bin/bash
+# This is the entrypoint script for the code-server Docker image
+# It allows you to configure code-server using environment variables
+# It is meant to run on a Fedora-based image
+
+server="code-server -w MONKESERVER -an MonkeServer --disable-telemetry"
+# Check $AUTHENTICATION_MODE variable
+if [ "$AUTHENTICATION_MODE" = "password" ]; then
+  # Start code-server with password
+  server+=" --auth password"
+elif [ "$AUTHENTICATION_MODE" = "none" ]; then
+  server+=" --auth none"
+fi
+
+# Check $PASSWORD variable
+# Check $HTTPS variable
+if [ -n "$HTTPS" ]; then
+  # Check /certs directory exists and is not empty
+  if [ -d "/certs" ] && [ "$(ls -A /certs)" ]; then
+    # Start code-server with HTTPS
+    server+=" --cert /certs/cert.pem --cert-key /certs/key.pem"
+  fi
+fi
+
+# Check $PORT variable
+if [ -n "$PORT" ]; then
+  server+=" --bind-addr 0.0.0.0:$PORT"
+else 
+  server+=" --bind-addr 0.0.0.0:8443"
+fi
+
+# Check $GITHUB_TOKEN variable
+if [ -n "$GITHUB_TOKEN" ]; then
+  server+=" --github-auth $GITHUB_TOKEN"
+fi
+
+# Variable $EXTENSIONS is a list of extensions separated by pipe "|"
+# Check $EXTENSIONS variable
+#if [ -n "$EXTENSIONS" ]; then
+#  # Split $EXTENSIONS by "|"
+#  IFS='|' read -ra EXTENSIONS <<< "$EXTENSIONS"
+#  # Loop through $EXTENSIONS
+#  for extension in "${EXTENSIONS[@]}"; do
+#    # Install extension
+#    server+=" --install-extension $extension"
+#  done
+#fi
+
+# Start code-server
+if [ -n "$DEBUG" ]; then
+  echo "Starting code-server with command: $server"
+fi
+
+exec $server
+
+echo -e "Config file:\n"
+cat .config/code-server/config.yaml
+if [ -n "$PASSWORD" ] || [ -n "$HASHED_PASSWORD" ]; then
+  echo "The password has been set via the PASSWORD or HASHED_PASSWORD environment variable."
+  echo "Please note that the HASHED_PASSWORD environment variable takes precedence over the PASSWORD environment variable."
+  echo -e "Password: $PASSWORD\nHashed Password: $HASHED_PASSWORD"
+fi

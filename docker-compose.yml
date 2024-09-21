@@ -1,0 +1,13 @@
+services:
+    codeserver:
+        container_name: codeserver
+        image: mfe-code-server:latest
+        network_mode: host
+        environment:
+            - AUTHENTICATION_MODE=password
+            - HASHED_PASSWORD=f535b77c20ee1fbee7fdb602479bfe5916e128af6f42425b33392b92031ba122
+            - HTTPS=false
+            - PORT=8080
+            - DEBUG=*
+        volumes:
+            - ./certs:/certs
