@@ -11,7 +11,7 @@ docker run -d -p 8080:8080 -v <TODO> -e <TODO> mfe-code-server
 ```
 or using `docker-compose`:
 ```yaml
-<TODO>
+docker compose up -d
 ```
 ### Environment Variables
 The whole execution is modified by using specific environment variables, the following table shows the available variables and their default values:
