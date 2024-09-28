@@ -1,0 +1,16 @@
+services:
+  codeserver:
+    container_name: codeserver
+    image: mfe-codeserver-x86:latest
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      - AUTHENTICATION_MODE=password
+      - HASHED_PASSWORD=${HASHED_PASSWORD}
+      - HTTPS=false
+      - PORT=8080
+      - DEBUG=*
+    volumes:
+      - ./files:/home/monke/files
+      - ./certs:/certs

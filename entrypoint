@@ -46,17 +46,13 @@ fi
 #  done
 #fi
 
+server+=" /home/monke/workspaces"
+
 # Start code-server
 if [ -n "$DEBUG" ]; then
   echo "Starting code-server with command: $server"
 fi
 
-exec $server
+sudo chown -R monke:monke .
 
-echo -e "Config file:\n"
-cat .config/code-server/config.yaml
-if [ -n "$PASSWORD" ] || [ -n "$HASHED_PASSWORD" ]; then
-  echo "The password has been set via the PASSWORD or HASHED_PASSWORD environment variable."
-  echo "Please note that the HASHED_PASSWORD environment variable takes precedence over the PASSWORD environment variable."
-  echo -e "Password: $PASSWORD\nHashed Password: $HASHED_PASSWORD"
-fi
+exec $server

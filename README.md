@@ -3,15 +3,65 @@ This is a containerized version of `code-server`, instead of using the official 
 ## How to use
 ### Build the image
 ```bash
-docker build -t mfe-code-server .
+docker build -t mfe-code-server-* .
 ```
 ### Run the container
+#### Detached 
 ```bash
-docker run -d -p 8080:8080 -v <TODO> -e <TODO> mfe-code-server
+docker run -d -p "8080:8080" -v '/path/to/project:/home/monke/workspaces/project' -e <...> mfe-code-server-*
 ```
-or using `docker-compose`:
+#### `docker-compose` (recommended)
+For custom builds:
 ```yaml
-docker compose up -d
+services:
+  web:
+    build: . 
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      - AUTHENTICATION_MODE=password
+      - HASHED_PASSWORD=${HASHED_PASSWORD}
+      - HTTPS=false
+      - PORT=8080
+      - DEBUG=
+    volumes:
+      - ./certs:/certs
+```
+Or use prebuilt images:
+##### x86
+```yaml
+services:
+  web:
+    image: mfe-code-server-x86:latest
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      - AUTHENTICATION_MODE=password
+      - HASHED_PASSWORD=${HASHED_PASSWORD}
+      - HTTPS=false
+      - PORT=8080
+      - DEBUG=
+    volumes:
+      - ./certs:/certs
+```
+##### ARM
+```yaml
+services:
+  web:
+    image: mfe-code-server-arm:latest
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      - AUTHENTICATION_MODE=password
+      - HASHED_PASSWORD=${HASHED_PASSWORD}
+      - HTTPS=false
+      - PORT=8080
+      - DEBUG=
+    volumes:
+      - ./certs:/certs
 ```
 ### Environment Variables
 The whole execution is modified by using specific environment variables, the following table shows the available variables and their default values:
